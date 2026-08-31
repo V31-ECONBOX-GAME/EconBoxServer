@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# Refreshes the time-on-record card so the commit being made carries the current
+# number.
+#
+# What it writes is read from committed history, so it describes the work up to
+# the previous commit; this one's time lands in the next commit, when the gap
+# between the two is what says how long it took.
+#
+# Never blocks a commit: a broken counter is not a reason to lose work.
+
+hook_dir=$(dirname "$0")
+changed=$("$hook_dir/coding-time" 2>/dev/null) || exit 0
+
+# Only what the script actually rewrote, named by the script itself. Staging the
+# pair unconditionally would be simpler, but it would also sweep up whatever the
+# author happens to have unstaged in the README at the time.
+[ -n "$changed" ] || exit 0
+root=$(git rev-parse --show-toplevel)
+printf '%s\n' "$changed" | while IFS= read -r path; do
+	[ -n "$path" ] && [ -f "$root/$path" ] && git add -- "$root/$path"
+done
+exit 0

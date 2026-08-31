@@ -1,0 +1,110 @@
+#!/bin/sh
+#
+# Estimates how long this repository has been worked on, draws the result as a
+# card, and points the README at it. Covers every author, not just whoever runs it.
+#
+# Commits record when work was saved, never how long it took, so the number is an
+# estimate: commits closer together than GAP_MINUTES belong to one sitting and
+# count the real time between them, while a commit that opens a sitting counts
+# OPENING_MINUTES for the work that led up to it.
+#
+# Run it by hand, or let .githooks/pre-commit run it for you. For the hook to run
+# at all, git has to be told where the hooks live:
+#
+#   git config core.hooksPath .githooks
+#
+# What it assumes can be changed from the environment:
+#
+#   GAP_MINUTES=90 .githooks/coding-time          end a sitting sooner
+#   OPENING_MINUTES=60 .githooks/coding-time      credit less to an opening commit
+#   RECENT_DAYS=7 .githooks/coding-time           a shorter "recently"
+#   DAYS=90 .githooks/coding-time                 a longer chart
+#   CODING_TIME_DEBUG=1 .githooks/coding-time     let errors through the hook
+#
+set -eu
+
+# The decimal point follows the locale and would reach the card: "86,5" is not a
+# number SVG accepts as a width. Dates need no such guard — they are counted off
+# in UTC from %at, which is the same number in every zone.
+LC_ALL=C
+export LC_ALL
+
+GAP_MINUTES=${GAP_MINUTES:-120}
+OPENING_MINUTES=${OPENING_MINUTES:-120}
+RECENT_DAYS=${RECENT_DAYS:-14}
+DAYS=${DAYS:-60}
+
+# Resolved before the cd below, which would otherwise strand a relative $0.
+program=$(cd "$(dirname "$0")" && pwd)/coding-time.awk
+[ -f "$program" ] || exit 0
+
+cd "$(git rev-parse --show-toplevel)"
+
+README=README.md
+CARD=.idea/readme/image/time-on-record.svg
+START='<!-- CODING-TIME:START -->'
+END='<!-- CODING-TIME:END -->'
+
+# Nothing to describe yet, nowhere to put it, or the markers are gone. Both
+# markers are required: with only an opening one, the splice below would treat
+# the whole rest of the file as the block it replaces.
+git rev-parse --verify --quiet HEAD >/dev/null || exit 0
+[ -f "$README" ] || exit 0
+grep -qF "$START" "$README" || exit 0
+grep -qF "$END" "$README" || exit 0
+
+# A merge is a commit whose timestamp says when branches met, not when anyone
+# worked, and one made days after the branch would open a sitting of its own.
+history() {
+	git log --no-merges --format='%at' 2>/dev/null
+}
+
+# A repository whose every commit is a merge has nothing left to describe.
+history | grep -q . || exit 0
+
+mkdir -p "$(dirname "$CARD")"
+card=$(mktemp)
+block=$(mktemp)
+updated=$(mktemp)
+trap 'rm -f "$card" "$block" "$updated"' EXIT
+
+# Sorted because the estimate walks forward in time, and because a rebase or an
+# imported history can leave author dates out of order.
+history | sort -n | awk \
+	-v gap="$((GAP_MINUTES * 60))" \
+	-v opening="$OPENING_MINUTES" \
+	-v recent="$RECENT_DAYS" \
+	-v days="$DAYS" \
+	-v now="$(date +%s)" \
+	-v card="$card" \
+	-v block="$block" \
+	-f "$program"
+
+# An empty card means awk stopped early. Whatever is already on disk describes
+# the repository better than nothing does, so leave it alone.
+[ -s "$card" ] || exit 0
+[ -s "$block" ] || exit 0
+
+# Rewritten only when the contents differ, so an unchanged run leaves both files,
+# and their timestamps, exactly as they were. Each path that did change is named
+# on stdout, which is how the hook knows what to stage and, more to the point,
+# what to leave alone.
+cmp -s "$card" "$CARD" 2>/dev/null || { cat "$card" > "$CARD" && echo "$CARD"; }
+
+# close() so a README carrying more than one pair of markers fills every one of
+# them: without it the second getline starts at end of file and silently empties
+# the block instead of replacing it.
+awk -v start="$START" -v end="$END" -v block="$block" '
+	index($0, start) {
+		print
+		while ((getline line < block) > 0) { print line }
+		close(block)
+		inside = 1
+		next
+	}
+	index($0, end) { inside = 0 }
+	!inside        { print }
+' "$README" > "$updated"
+
+[ -s "$updated" ] || exit 0
+cmp -s "$README" "$updated" || { cat "$updated" > "$README" && echo "$README"; }
