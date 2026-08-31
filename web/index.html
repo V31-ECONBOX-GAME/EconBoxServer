@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EconBox</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; height: 100vh; display: flex; flex-direction: column;
+    background: #0d1017; color: #c9d1d9;
+    font: 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  #bar { display: flex; align-items: center; gap: 14px; padding: 8px 12px; flex-wrap: wrap; }
+  button {
+    background: #151922; color: #c9d1d9; border: 1px solid #232936;
+    border-radius: 5px; padding: 5px 12px; font: inherit; cursor: pointer;
+  }
+  button:hover { border-color: #4cc38a; }
+  label { display: flex; align-items: center; gap: 6px; color: #6b7683; }
+  input[type=range] { width: 96px; accent-color: #4cc38a; }
+  #status { margin-left: auto; color: #6b7683; }
+  #status.error { color: #e06c75; }
+  #stage { flex: 1; min-height: 0; padding: 0 12px 12px; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+  <div id="bar">
+    <button id="toggle">Pause</button>
+    <button id="single">Step</button>
+    <button id="reset">Reset</button>
+    <label>speed <input id="speed" type="range" min="0" max="20" step="1" value="1"><span id="speedValue">1</span></label>
+    <label>tax <input id="tax" type="range" min="0" max="20" step="1" value="0"><span id="taxValue">0.0%</span></label>
+    <label>flex <input id="flex" type="range" min="0" max="50" step="1" value="8"><span id="flexValue">0.08</span></label>
+    <span id="status">connecting</span>
+  </div>
+  <div id="stage"><canvas id="view"></canvas></div>
+
+<script>
+// The reference EconBox client. It owns exactly two things: the clock and the
+// pixels. Every layout, colour and number comes from the server.
+const stage = document.getElementById('stage');
+const canvas = document.getElementById('view');
+const ctx = canvas.getContext('2d');
+const status = document.getElementById('status');
+
+let running = true;
+let ticksPerFrame = 1;
+let inFlight = false;
+let frames = 0;
+let lastFpsAt = performance.now();
+
+// --- painting ---------------------------------------------------------------
+
+const painters = {
+  rect(op) {
+    ctx.fillStyle = op.fill;
+    if (op.radius > 0 && ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(op.x, op.y, op.w, op.h, op.radius);
+      ctx.fill();
+    } else {
+      ctx.fillRect(op.x, op.y, op.w, op.h);
+    }
+  },
+  line(op) {
+    ctx.strokeStyle = op.stroke;
+    ctx.lineWidth = op.width;
+    ctx.beginPath();
+    ctx.moveTo(op.x1, op.y1);
+    ctx.lineTo(op.x2, op.y2);
+    ctx.stroke();
+  },
+  circle(op) {
+    ctx.fillStyle = op.fill;
+    ctx.beginPath();
+    ctx.arc(op.x, op.y, op.r, 0, Math.PI * 2);
+    ctx.fill();
+  },
+  polyline(op) {
+    // Points arrive flattened: [x0, y0, x1, y1, ...]
+    ctx.strokeStyle = op.stroke;
+    ctx.lineWidth = op.width;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for (let i = 0; i + 1 < op.points.length; i += 2) {
+      const x = op.points[i], y = op.points[i + 1];
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  },
+  text(op) {
+    ctx.fillStyle = op.fill;
+    ctx.textAlign = op.align;
+    // The server sends a size, the client picks the family.
+    ctx.font = op.size + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
+    ctx.fillText(op.text, op.x, op.y);
+  },
+};
+
+function paint(scene) {
+  const dpr = window.devicePixelRatio || 1;
+  if (canvas.width !== scene.width * dpr || canvas.height !== scene.height * dpr) {
+    canvas.width = scene.width * dpr;
+    canvas.height = scene.height * dpr;
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = scene.background;
+  ctx.fillRect(0, 0, scene.width, scene.height);
+  for (const op of scene.ops) {
+    const painter = painters[op.op];
+    if (painter) painter(op);
+  }
+}
+
+// --- server calls -----------------------------------------------------------
+
+async function post(path, body) {
+  const response = await fetch(path, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) throw new Error(path + ' -> ' + response.status);
+  return response.json();
+}
+
+async function tick() {
+  if (inFlight) return;
+  inFlight = true;
+  try {
+    // One round trip per frame: advance the world and get the picture back.
+    const scene = await post('/api/frame', {
+      width: Math.round(stage.clientWidth),
+      height: Math.round(stage.clientHeight),
+      advance: running ? ticksPerFrame : 0,
+    });
+    paint(scene);
+    status.classList.remove('error');
+    frames++;
+    const now = performance.now();
+    if (now - lastFpsAt > 500) {
+      const fps = (frames * 1000) / (now - lastFpsAt);
+      status.textContent = 'tick ' + scene.tick + '  -  ' + fps.toFixed(0) + ' fps';
+      frames = 0;
+      lastFpsAt = now;
+    }
+  } catch (error) {
+    status.textContent = String(error.message || error);
+    status.classList.add('error');
+  } finally {
+    inFlight = false;
+  }
+}
+
+function loop() {
+  tick();
+  requestAnimationFrame(loop);
+}
+
+// --- controls ---------------------------------------------------------------
+
+document.getElementById('toggle').onclick = (event) => {
+  running = !running;
+  event.target.textContent = running ? 'Pause' : 'Play';
+};
+document.getElementById('single').onclick = () => post('/api/step', { ticks: 1 });
+document.getElementById('reset').onclick = () => post('/api/reset', {});
+
+const speed = document.getElementById('speed');
+speed.oninput = () => {
+  ticksPerFrame = Number(speed.value);
+  document.getElementById('speedValue').textContent = speed.value;
+};
+
+const tax = document.getElementById('tax');
+tax.oninput = () => {
+  // The tax is charged every tick, so a whole percent is already a strong
+  // dose: at 1% per tick the wealth spread halves in about 70 ticks.
+  const percent = Number(tax.value) / 10;
+  document.getElementById('taxValue').textContent = percent.toFixed(1) + '%';
+  post('/api/params', { tax_rate: percent / 100 });
+};
+
+const flex = document.getElementById('flex');
+flex.oninput = () => {
+  const value = Number(flex.value) / 100;
+  document.getElementById('flexValue').textContent = value.toFixed(2);
+  post('/api/params', { price_flex: value });
+};
+
+loop();
+</script>
+</body>
+</html>

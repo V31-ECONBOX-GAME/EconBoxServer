@@ -1,0 +1,29 @@
+[package]
+name = "econbox-server"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+description = "EconBox simulation server: the server owns all computation, the client only draws"
+repository = "https://github.com/wangxiang4/econbox-server"
+readme = "README.md"
+keywords = ["simulation", "economics", "server", "rendering", "agent-based"]
+categories = ["simulation", "web-programming::http-server"]
+exclude = ["/.idea", "/.githooks", "/target"]
+
+# Deliberately dependency-free: HTTP, JSON and RNG are all hand-written under
+# src/ so every line is readable, editable and removable. Adding a crate here
+# should be a decision, not a habit. See docs/ARCHITECTURE.md.
+[dependencies]
+
+[lib]
+name = "econbox_server"
+path = "src/lib.rs"
+
+[[bin]]
+name = "econbox-server"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
+lto = true

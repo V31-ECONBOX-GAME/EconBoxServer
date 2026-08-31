@@ -1,0 +1,11 @@
+/target
+.DS_Store
+
+### IntelliJ IDEA ###
+.idea/*
+!.idea/icon.svg
+!.idea/copyright/
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+!.idea/sonarlint.xml
+!readme/

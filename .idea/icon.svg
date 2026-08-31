@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="510" height="510" viewBox="0 0 510 510" role="img" aria-labelledby="title desc">
+  <title id="title">V31 Bank wasteland vault</title>
+  <desc id="desc">Hand-drawn vector artwork of a fortified circular bank vault in a ruined wasteland.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#33271d"/>
+      <stop offset="0.48" stop-color="#765237"/>
+      <stop offset="1" stop-color="#171412"/>
+    </linearGradient>
+    <linearGradient id="concrete" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#725840"/>
+      <stop offset="0.28" stop-color="#3a3028"/>
+      <stop offset="0.65" stop-color="#806044"/>
+      <stop offset="1" stop-color="#27231f"/>
+    </linearGradient>
+    <radialGradient id="door" cx="43%" cy="35%" r="72%">
+      <stop offset="0" stop-color="#4c4740"/>
+      <stop offset="0.43" stop-color="#242523"/>
+      <stop offset="0.76" stop-color="#181918"/>
+      <stop offset="1" stop-color="#080908"/>
+    </radialGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c2ae8d"/>
+      <stop offset="0.17" stop-color="#4d4a44"/>
+      <stop offset="0.43" stop-color="#a28968"/>
+      <stop offset="0.7" stop-color="#343532"/>
+      <stop offset="1" stop-color="#8b6a49"/>
+    </linearGradient>
+    <linearGradient id="ivory" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#efe0bd"/>
+      <stop offset="0.45" stop-color="#bda47d"/>
+      <stop offset="0.72" stop-color="#e0cda7"/>
+      <stop offset="1" stop-color="#7d5836"/>
+    </linearGradient>
+    <linearGradient id="rust" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c27a35"/>
+      <stop offset="0.5" stop-color="#693017"/>
+      <stop offset="1" stop-color="#241510"/>
+    </linearGradient>
+    <pattern id="scratches" width="29" height="23" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)">
+      <path d="M2 3h8M17 8h10M4 17h14M22 20h5" stroke="#d1b38d" stroke-width="1" opacity=".18"/>
+      <path d="M12 1v7M25 11v8" stroke="#100d0a" stroke-width="1.2" opacity=".45"/>
+    </pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
+      <feOffset dx="4" dy="7" result="offset"/>
+      <feColorMatrix in="offset" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .8 0"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".035 .09" numOctaves="3" seed="31" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <clipPath id="doorClip"><circle cx="255" cy="275" r="151"/></clipPath>
+    <g id="v31mark">
+      <path d="M119 202H157L181 292L205 202H243L202 334H160Z"/>
+      <path d="M222 202H286C309 202 322 214 322 236V247C322 264 315 274 301 280C317 286 325 298 325 315V318C325 329 316 334 300 334H222V303H280C289 303 292 299 292 290C292 282 287 278 278 278H246V252H279C287 252 290 248 290 240C290 235 286 231 279 231H222ZM290 231V252C300 250 302 246 302 240C302 235 299 232 290 231ZM292 278V303C302 301 305 297 305 290C305 284 301 280 292 278Z" fill-rule="evenodd"/>
+      <path d="M342 202H374V334H339V247L315 261V225Z"/>
+    </g>
+    <clipPath id="markClip"><use href="#v31mark"/></clipPath>
+  </defs>
+
+  <!-- sky and ruined skyline -->
+  <rect width="510" height="510" fill="url(#sky)"/>
+  <path d="M0 127L15 119L21 62L26 117L41 112L45 76L50 112L62 106L68 41L73 108L89 112V189H0ZM510 88L492 91L486 48L480 95L464 105L458 66L452 111L431 103V189H510Z" fill="#151514" opacity=".9"/>
+  <path d="M0 90C38 62 69 96 110 68C150 42 182 74 221 50C260 25 300 74 337 48C381 18 423 74 510 43V0H0Z" fill="#1a1714" opacity=".62"/>
+
+  <!-- bunker mass -->
+  <path d="M34 468V91L56 91L56 42L89 34L102 18H416L427 33L454 44V93H476V468Z" fill="#141312" stroke="#0b0a09" stroke-width="8"/>
+  <rect x="49" y="36" width="412" height="78" rx="5" fill="url(#concrete)" stroke="#17120f" stroke-width="7" filter="url(#rough)"/>
+  <path d="M62 49H450V100H62Z" fill="none" stroke="#997353" stroke-width="2" opacity=".35"/>
+  <!-- VAULT 31 stencil, every letter is a hand-built vector path -->
+  <g fill="#161513" opacity=".84">
+    <path d="M157 62h7l6 18l6-18h7l-9 25h-8Z"/>
+    <path d="M182 87l8-25h9l8 25h-7l-2-7h-8l-2 7Zm10-13h5l-3-8Z" fill-rule="evenodd"/>
+    <path d="M208 62h7v17c0 3 1 4 4 4s4-1 4-4V62h7v17c0 6-4 9-11 9s-11-3-11-9Z"/>
+    <path d="M235 62h7v19h12v6h-19Z"/>
+    <path d="M253 62h23v6h-8v19h-7V68h-8Z"/>
+    <path d="M286 62h14c7 0 10 3 10 8c0 4-2 6-5 7c4 1 6 3 6 6c0 3-3 5-9 5h-16v-6h14c2 0 3-1 3-2s-1-2-3-2h-8v-5h8c2 0 3-1 3-3c0-1-1-2-3-2h-14Z"/>
+    <path d="M314 68l8-6h7v25h-7V70l-8 5Z"/>
+  </g>
+  <path d="M81 42l12 19l-9 16l14 24M136 37l-7 22l11 12l-5 31M386 41l-12 22l7 19l-9 22M439 48l-14 18l10 19l-8 20" fill="none" stroke="#1b1511" stroke-width="3"/>
+
+  <!-- side concrete pillars -->
+  <path d="M47 109H112V459H47Z" fill="url(#concrete)" stroke="#191512" stroke-width="7" filter="url(#rough)"/>
+  <path d="M398 109H463V459H398Z" fill="url(#concrete)" stroke="#191512" stroke-width="7" filter="url(#rough)"/>
+  <path d="M66 120v75l11 18l-9 42l13 34l-10 48l14 61l-9 49M445 119l-12 47l9 38l-13 33l10 57l-15 42l13 46l-7 61" fill="none" stroke="#191512" stroke-width="4" opacity=".9"/>
+  <path d="M58 128h43M58 221h43M58 357h43M409 156h43M409 285h43M409 399h43" stroke="#a87a53" stroke-width="2" opacity=".28"/>
+
+  <!-- vault body -->
+  <circle cx="255" cy="275" r="183" fill="#0d0e0d" stroke="#050505" stroke-width="9" filter="url(#shadow)"/>
+  <circle cx="255" cy="275" r="174" fill="url(#steel)" stroke="#8a6b4a" stroke-width="4"/>
+  <circle cx="255" cy="275" r="162" fill="#181918" stroke="#090a09" stroke-width="9"/>
+  <circle cx="255" cy="275" r="151" fill="url(#door)" stroke="#9a805e" stroke-width="5"/>
+  <circle cx="255" cy="275" r="136" fill="none" stroke="#5a5143" stroke-width="13"/>
+  <circle cx="255" cy="275" r="119" fill="none" stroke="#9c7954" stroke-width="3" opacity=".72"/>
+  <circle cx="255" cy="275" r="108" fill="none" stroke="#0b0c0b" stroke-width="8"/>
+  <circle cx="255" cy="275" r="151" fill="url(#scratches)" opacity=".74"/>
+
+  <!-- radial armor divisions -->
+  <g stroke="#0b0c0b" stroke-width="5" opacity=".88">
+    <path d="M255 112V139"/><path d="M255 411V438"/>
+    <path d="M92 275H119"/><path d="M391 275H418"/>
+    <path d="M140 160l19 19"/><path d="M351 371l19 19"/>
+    <path d="M370 160l-19 19"/><path d="M159 371l-19 19"/>
+  </g>
+  <g stroke="#b08a62" stroke-width="2" opacity=".65">
+    <path d="M255 116V137" transform="rotate(30 255 275)"/><path d="M255 116V137" transform="rotate(60 255 275)"/>
+    <path d="M255 116V137" transform="rotate(120 255 275)"/><path d="M255 116V137" transform="rotate(150 255 275)"/>
+    <path d="M255 116V137" transform="rotate(210 255 275)"/><path d="M255 116V137" transform="rotate(240 255 275)"/>
+    <path d="M255 116V137" transform="rotate(300 255 275)"/><path d="M255 116V137" transform="rotate(330 255 275)"/>
+  </g>
+
+  <!-- locking bars -->
+  <g id="lockingBar" filter="url(#shadow)">
+    <path d="M240 105H270L278 165L267 182H243L232 165Z" fill="url(#steel)" stroke="#171410" stroke-width="4"/>
+    <rect x="247" y="117" width="16" height="58" rx="3" fill="#564634" stroke="#baa17c" stroke-width="2"/>
+    <circle cx="255" cy="126" r="4" fill="#171513" stroke="#c09a6b"/>
+  </g>
+  <use href="#lockingBar" transform="rotate(90 255 275)"/>
+  <use href="#lockingBar" transform="rotate(180 255 275)"/>
+  <use href="#lockingBar" transform="rotate(270 255 275)"/>
+  <g transform="rotate(45 255 275)" opacity=".86"><use href="#lockingBar"/></g>
+  <g transform="rotate(135 255 275)" opacity=".86"><use href="#lockingBar"/></g>
+  <g transform="rotate(225 255 275)" opacity=".86"><use href="#lockingBar"/></g>
+  <g transform="rotate(315 255 275)" opacity=".86"><use href="#lockingBar"/></g>
+
+  <!-- rivets -->
+  <g fill="#161514" stroke="#b18c64" stroke-width="2">
+    <circle cx="255" cy="119" r="6"/><circle cx="333" cy="140" r="6"/><circle cx="390" cy="197" r="6"/>
+    <circle cx="411" cy="275" r="6"/><circle cx="390" cy="353" r="6"/><circle cx="333" cy="410" r="6"/>
+    <circle cx="255" cy="431" r="6"/><circle cx="177" cy="410" r="6"/><circle cx="120" cy="353" r="6"/>
+    <circle cx="99" cy="275" r="6"/><circle cx="120" cy="197" r="6"/><circle cx="177" cy="140" r="6"/>
+  </g>
+
+  <!-- V31 emblem: true vector paths -->
+  <g filter="url(#shadow)">
+    <use href="#v31mark" transform="translate(4 7)" fill="#0a0908" opacity=".85"/>
+    <use href="#v31mark" fill="url(#ivory)" stroke="#3a2418" stroke-width="3" stroke-linejoin="round"/>
+    <g clip-path="url(#markClip)" fill="none" stroke-linecap="round">
+      <path d="M128 224l35 9l-20 21l44 8l-15 29l38 14M231 217l29 16l-18 24l51 14l-23 25l35 18M345 216l19 24l-17 20l19 30l-13 29" stroke="#5c3019" stroke-width="5" opacity=".78"/>
+      <path d="M113 312l55-13M198 219l15 31M230 324l45-12M305 213l-21 35M335 302l45-11" stroke="#f0d8ad" stroke-width="2" opacity=".52"/>
+      <path d="M100 336H390V347H100Z" stroke="url(#rust)" stroke-width="15" opacity=".55"/>
+    </g>
+  </g>
+
+  <!-- BANK lettering, constructed from paths -->
+  <g fill="url(#steel)" stroke="#20150f" stroke-width="2" filter="url(#shadow)">
+    <path d="M193 349H207C217 349 221 353 221 360C221 364 219 367 216 368C220 370 222 373 222 378C222 386 217 390 207 390H193Zm8 7v9h6c4 0 6-1 6-5C213 357 211 356 207 356Zm0 16v11h7c4 0 6-2 6-6C214 373 212 372 208 372Z" fill-rule="evenodd"/>
+    <path d="M229 390l12-41h12l12 41h-9l-2-9h-14l-2 9Zm13-16h10l-5-17Z" fill-rule="evenodd"/>
+    <path d="M273 390v-41h9l15 25v-25h8v41h-9l-15-25v25Z"/>
+    <path d="M316 390v-41h9v16l14-16h11l-17 19l18 22h-12l-14-18v18Z"/>
+  </g>
+
+  <!-- central hand wheel -->
+  <g transform="translate(255 412)" filter="url(#shadow)">
+    <circle r="31" fill="#121311" stroke="url(#steel)" stroke-width="7"/>
+    <circle r="20" fill="#382b20" stroke="#9e7650" stroke-width="3"/>
+    <g stroke="#a4815d" stroke-width="5"><path d="M0-20V20"/><path d="M-20 0H20"/><path d="M-14-14L14 14"/><path d="M14-14L-14 14"/></g>
+    <circle r="8" fill="#171513" stroke="#c09a6b" stroke-width="3"/>
+  </g>
+
+  <!-- radiation plaques -->
+  <g transform="translate(58 229) rotate(-2)" filter="url(#shadow)">
+    <rect width="49" height="91" rx="2" fill="#7e5e39" stroke="#17130f" stroke-width="4"/>
+    <path d="M7 12H42V19H7ZM10 73H39V78H10ZM13 82H36V86H13Z" fill="#201a14"/>
+    <g transform="translate(25 47)" fill="#201a14">
+      <circle r="5"/><path d="M-3-8L-14-25A27 27 0 0 1 4-27L2-8Z"/><path d="M8 1L28 4A27 27 0 0 1 18 20L3 7Z"/><path d="M-5 6L-15 24A27 27 0 0 1-27 8L-8 1Z"/>
+    </g>
+  </g>
+  <g transform="translate(413 249) rotate(3) scale(.75)" filter="url(#shadow)">
+    <rect width="49" height="91" rx="2" fill="#7e5e39" stroke="#17130f" stroke-width="4"/>
+    <g transform="translate(25 40)" fill="#201a14"><circle r="5"/><path d="M-3-8L-14-25A27 27 0 0 1 4-27L2-8Z"/><path d="M8 1L28 4A27 27 0 0 1 18 20L3 7Z"/><path d="M-5 6L-15 24A27 27 0 0 1-27 8L-8 1Z"/></g>
+    <path d="M9 71H40V77H9ZM13 82H36V86H13Z" fill="#201a14"/>
+  </g>
+
+  <!-- cracks across door -->
+  <g clip-path="url(#doorClip)" fill="none" stroke="#080908" stroke-width="3" opacity=".82">
+    <path d="M105 188l26 10l12 22l21 3l11 19M383 171l-23 18l-8 27l-18 10M96 330l30-8l17 14l19-4M407 331l-24-11l-15 13l-20-5"/>
+    <path d="M142 409l20-20l-2-22l20-14M371 407l-18-24l4-20l-15-17"/>
+  </g>
+
+  <!-- wasteland foreground and debris -->
+  <path d="M0 430L32 416L58 438L93 418L128 443L166 430L203 452L247 435L291 450L333 429L377 447L421 421L458 441L510 420V510H0Z" fill="#161310"/>
+  <path d="M0 467l31-17l25 14l20-9l38 24l37-16l30 18l53-17l43 20l42-23l38 16l44-21l45 20l54-19v53H0Z" fill="#292017"/>
+  <g fill="#493521" stroke="#120f0c" stroke-width="3">
+    <path d="M17 471l20-23l25 11l8 29l-38 6Z"/><path d="M80 485l24-26l34 17l-12 28H91Z"/>
+    <path d="M376 478l22-32l29 8l10 30l-34 18Z"/><path d="M447 461l31-26l24 19l8 35l-49 8Z"/>
+  </g>
+  <g stroke="#9c6840" stroke-width="3" opacity=".62">
+    <path d="M22 501l38-37l47 40M342 505l35-45l46 41M132 505l27-25l33 23M430 505l24-23l34 22"/>
+  </g>
+  <path d="M161 475h79v24h-79ZM269 475h79v24h-79Z" fill="#0b0b0a" stroke="#6f4b2e" stroke-width="3"/>
+  <g stroke="#6f4b2e" stroke-width="2" opacity=".75">
+    <path d="M169 475v24M181 475v24M193 475v24M205 475v24M217 475v24M229 475v24M277 475v24M289 475v24M301 475v24M313 475v24M325 475v24M337 475v24"/>
+    <path d="M161 483h79M161 491h79M269 483h79M269 491h79"/>
+  </g>
+  <rect width="510" height="510" fill="none" stroke="#080706" stroke-width="12"/>
+</svg>
